@@ -207,29 +207,17 @@ def main():
         rng.shuffle(candidates)
         sampled_by_term[term] = candidates[:min(args.samples_per_term, len(candidates))]
         print(f'{term}: {len(sampled_by_term[term])}')
-    # Preserve the original shuffle sequence so seed 42 selects the same samples.
     balanced = []
     for term in TARGET_TERMS:
         balanced.extend(sampled_by_term[term])
     rng.shuffle(balanced)
-    splits = {'train': [], 'val': [], 'test': []}
-    for term in TARGET_TERMS:
-        term_examples = sampled_by_term[term]
-        rng.shuffle(term_examples)
-        n = len(term_examples)
-        n_train, n_val = (int(n * 0.8), int(n * 0.1))
-        splits['train'].extend(term_examples[:n_train])
-        splits['val'].extend(term_examples[n_train:n_train + n_val])
-        splits['test'].extend(term_examples[n_train + n_val:])
-    for split, items in splits.items():
-        rng.shuffle(items)
-        converted = []
-        for i, example in enumerate(items):
-            try:
-                converted.append(convert_example(example))
-            except Exception as e:
-                print(f'Conversion error {split}/{i}: {e}')
-        save_json(args.out / f'{split}.json', converted)
-        print(f'{split}: {len(converted)} examples')
+    converted = []
+    for i, example in enumerate(balanced):
+        try:
+            converted.append(convert_example(example))
+        except Exception as e:
+            print(f'Conversion error train/{i}: {e}')
+    save_json(args.out / 'train.json', converted)
+    print(f'train: {len(converted)} examples')
 if __name__ == '__main__':
     main()

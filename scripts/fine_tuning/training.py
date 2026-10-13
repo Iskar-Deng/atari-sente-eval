@@ -19,10 +19,8 @@ def main():
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
     train_file = project_path(config['train_file'])
-    validation_file = project_path(config['validation_file'])
-    for path in [train_file, validation_file]:
-        if not path.is_file():
-            parser.error(f'Missing training data: {path}; run scripts/annotation/run.sh first')
+    if not train_file.is_file():
+        parser.error(f'Missing training data: {train_file}; run scripts/annotation/run.sh first')
 
     cache = project_path(config['cache_dir'])
     # Set cache locations before importing Hugging Face libraries.
@@ -46,9 +44,7 @@ def main():
     if not torch.cuda.is_available():
         parser.error('Fine-tuning requires a CUDA-enabled PyTorch installation and an NVIDIA GPU')
 
-    dataset = load_dataset('json', data_files={
-        'train': str(train_file), 'validation': str(validation_file),
-    })
+    dataset = load_dataset('json', data_files={'train': str(train_file)})
     tokenizer = AutoTokenizer.from_pretrained(config['base_model'], trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -81,7 +77,7 @@ def main():
     )
     trainer = SFTTrainer(
         model=model, args=training_args,
-        train_dataset=dataset['train'], eval_dataset=dataset['validation'],
+        train_dataset=dataset['train'],
         formatting_func=format_example, processing_class=tokenizer,
         peft_config=LoraConfig(**config['lora']),
     )

@@ -152,7 +152,7 @@ def main():
     args = parser.parse_args()
     if args.visits < 1 or args.max_history < 0:
         parser.error('Visits must be positive and history length nonnegative')
-    sources = [args.input_dir / f'{split}.json' for split in ['train', 'val', 'test']]
+    sources = [args.input_dir / 'train.json']
     for source in sources:
         if not source.is_file():
             parser.error(f'Missing input: {source}')
