@@ -3,7 +3,7 @@
   "adapter_path": "local/models/logos-qlora/final",
   "cache_dir": "local/cache",
   "max_input_length": 3072,
-  "max_new_tokens": 16,
+  "max_new_tokens": 128,
   "max_generation_seconds": 60,
   "tasks": {
     "atari_sente": {
