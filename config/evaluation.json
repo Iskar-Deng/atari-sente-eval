@@ -1,0 +1,18 @@
+{
+  "base_model": "YichuanMa/LoGos-7B",
+  "adapter_path": "local/models/logos-qlora/final",
+  "cache_dir": "local/cache",
+  "max_input_length": 3072,
+  "max_new_tokens": 16,
+  "max_generation_seconds": 60,
+  "tasks": {
+    "atari_sente": {
+      "input_dir": "data/atari_sente",
+      "output_file": "local/evaluation/atari_sente.json"
+    },
+    "non_sente_atari": {
+      "input_dir": "data/non_sente_atari",
+      "output_file": "local/evaluation/non_sente_atari.json"
+    }
+  }
+}
